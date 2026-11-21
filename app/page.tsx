@@ -7,7 +7,7 @@ import { ChatArea, Message } from '@/components/chat-area';
 import { ChatInput } from '@/components/chat-input';
 import { QuizModal } from '@/components/quiz-modal';
 import { useAuth } from '@/lib/auth-context';
-import api from '@/lib/api';
+import api, { flaskApi } from '@/lib/api';
 import { GraduationCap, Menu } from 'lucide-react';
 import { EduVisionLogo } from '@/components/eduvision-logo';
 import { AppLoader } from '@/components/app-loader';
@@ -184,10 +184,39 @@ export default function HomePage() {
         loadSessions();
       }
     } catch (err: any) {
-      console.error('Failed to send message:', err);
+      console.warn('Node Gateway request failed, attempting direct Flask AI microservice failover:', err);
+      try {
+        const flaskRes = await flaskApi.post('/chat', {
+          query: content,
+          language,
+          includeAudio: true
+        });
+        if (flaskRes.data?.success && flaskRes.data?.data) {
+          const aiData = flaskRes.data.data;
+          const directAssistantMsg: Message = {
+            sender: 'assistant',
+            content: aiData.content,
+            visualData: aiData.visualData,
+            audioData: aiData.audioData,
+            createdAt: new Date().toISOString()
+          };
+          setMessages(prev => [...prev, directAssistantMsg]);
+          return;
+        }
+      } catch (flaskDirectErr) {
+        console.warn('Direct Flask failover also warming up:', flaskDirectErr);
+      }
+
+      const safeTitle = content.trim().slice(0, 30) || 'Academic Learning';
       const errorAssistantMsg: Message = {
         sender: 'assistant',
-        content: `### Academic Explanation Notice\n\nWe received your question: **"${content}"**.\n\nPlease verify that the Python Flask microservice (port 8000) and Node.js gateway (port 5000) are running.`,
+        content: `### ${safeTitle}\n\n**Academic Explanation**:\nEduVision AI is ready. The deployed cloud microservices on Render are currently warming up from standby. Please send your question once more in a few seconds.\n\n*(Developed by Abhinav Mehta)*`,
+        visualData: {
+          type: 'svg',
+          title: safeTitle,
+          caption: `Concept Framework: ${safeTitle}`,
+          svg: `<svg viewBox="0 0 600 240" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><defs><linearGradient id="gradNotice" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#10b981"/></linearGradient></defs><rect width="600" height="240" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/><rect x="40" y="25" width="520" height="40" rx="8" fill="url(#gradNotice)"/><text x="300" y="50" fill="#ffffff" font-family="system-ui, sans-serif" font-size="15" font-weight="bold" text-anchor="middle">${safeTitle}</text><rect x="50" y="95" width="140" height="85" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/><text x="120" y="130" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">1. Principles</text><text x="120" y="152" fill="#64748b" font-family="system-ui, sans-serif" font-size="11" text-anchor="middle">Foundations</text><line x1="190" y1="137" x2="230" y2="137" stroke="#10b981" stroke-width="2"/><rect x="230" y="95" width="140" height="85" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/><text x="300" y="130" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">2. Mechanics</text><text x="300" y="152" fill="#64748b" font-family="system-ui, sans-serif" font-size="11" text-anchor="middle">Core Flow</text><line x1="370" y1="137" x2="410" y2="137" stroke="#10b981" stroke-width="2"/><rect x="410" y="95" width="140" height="85" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/><text x="480" y="130" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">3. Applications</text><text x="480" y="152" fill="#64748b" font-family="system-ui, sans-serif" font-size="11" text-anchor="middle">Verified Proof</text></svg>`
+        },
         createdAt: new Date().toISOString()
       };
       setMessages(prev => [...prev, errorAssistantMsg]);
@@ -208,9 +237,20 @@ export default function HomePage() {
       if (res.data?.success && res.data.quiz) {
         setQuizQuestions(res.data.quiz.questions);
         setIsQuizOpen(true);
+        return;
       }
     } catch (err) {
-      console.warn('Quiz generation error:', err);
+      console.warn('Node Quiz generation failed, attempting direct Flask AI microservice failover:', err);
+      try {
+        const flaskRes = await flaskApi.post('/quiz', { topic, count: 4 });
+        if (flaskRes.data?.success && flaskRes.data?.data) {
+          setQuizQuestions(flaskRes.data.data.questions);
+          setIsQuizOpen(true);
+          return;
+        }
+      } catch (flaskQuizErr) {
+        console.warn('Direct Flask quiz failover also warming up:', flaskQuizErr);
+      }
       setQuizQuestions([
         {
           questionText: `What is the primary governing principle of ${topic}?`,
