@@ -1,7 +1,11 @@
 import axios from 'axios';
 
 // Defaults to your live deployed Node.js Gateway on Render
-let rawUrl = process.env.NEXT_PUBLIC_API_URL || 'https://eduvision-ai-server-node.onrender.com/api';
+// Supports both Next.js Config variables (API_URL) and public prefix (NEXT_PUBLIC_API_URL)
+let rawUrl = 
+  process.env.API_URL || 
+  process.env.NEXT_PUBLIC_API_URL || 
+  'https://eduvision-ai-server-node.onrender.com/api';
 
 // Safely normalize trailing slashes and ensure /api endpoint
 rawUrl = rawUrl.trim();
@@ -29,7 +33,13 @@ api.interceptors.request.use((config) => {
 });
 
 // Live Flask AI Microservice URL on Render
-let rawFlaskUrl = process.env.NEXT_PUBLIC_FLASK_URL || 'https://eduvision-ai-server-flask.onrender.com/api/ai';
+// Supports both Next.js Config variables (FLASK_URL) and public prefix (NEXT_PUBLIC_FLASK_URL)
+let rawFlaskUrl = 
+  process.env.FLASK_URL || 
+  process.env.FLASK_AI_URL || 
+  process.env.NEXT_PUBLIC_FLASK_URL || 
+  'https://eduvision-ai-server-flask.onrender.com/api/ai';
+
 rawFlaskUrl = rawFlaskUrl.trim();
 if (!rawFlaskUrl.endsWith('/api/ai')) {
   rawFlaskUrl = rawFlaskUrl.replace(/\/+$/, '') + '/api/ai';
