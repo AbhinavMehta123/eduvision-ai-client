@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="eduGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+  <!-- Background rounded pill -->
+  <rect width="64" height="64" rx="16" fill="url(#eduGrad)"/>
+  
+  <!-- Graduation Cap Top diamond -->
+  <path d="M32 14L52 24L32 34L12 24L32 14Z" fill="#ffffff" fill-opacity="0.95"/>
+  
+  <!-- Graduation Cap Underbody / Skullcap -->
+  <path d="M20 28.5V37C20 42 25.5 45.5 32 45.5C38.5 45.5 44 42 44 37V28.5L32 34.5L20 28.5Z" fill="#ffffff" fill-opacity="0.8"/>
+  
+  <!-- Tassel Ribbon & Ring -->
+  <path d="M48 26V39C48 40.5 46.5 42 45 42" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="45" cy="43.5" r="2" fill="#ffffff"/>
+  
+  <!-- AI Vision Core Indicator in center of cap -->
+  <circle cx="32" cy="24" r="3.5" fill="url(#eduGrad)"/>
+  <circle cx="32" cy="24" r="1.5" fill="#34d399"/>
+</svg>

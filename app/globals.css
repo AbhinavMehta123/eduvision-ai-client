@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css');
+
+:root {
+  --background: #f7f7f8;
+  --foreground: #18181b;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Light Off-White Scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Audio wave pulse animation */
+@keyframes wave-pulse {
+  0%, 100% { height: 6px; }
+  50% { height: 22px; }
+}
+
+.animate-wave-1 { animation: wave-pulse 1s ease-in-out infinite; }
+.animate-wave-2 { animation: wave-pulse 1s ease-in-out 0.2s infinite; }
+.animate-wave-3 { animation: wave-pulse 1s ease-in-out 0.4s infinite; }
+
+/* Continuous Fluid Shimmer for Professional Skeleton Loader */
+@keyframes continuous-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: continuous-shimmer 1.8s infinite ease-in-out;
+}
+
+/* Ambient Breathing Glow */
+@keyframes ambient-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px -3px rgba(16, 185, 129, 0.2), 0 0 6px -2px rgba(16, 185, 129, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 25px 2px rgba(16, 185, 129, 0.4), 0 0 10px 0px rgba(16, 185, 129, 0.2);
+  }
+}
+
+.animate-glow {
+  animation: ambient-glow 2.5s infinite ease-in-out;
+}
+
+/* Blueprint laser scan line */
+@keyframes blueprint-scan {
+  0% { top: 0%; opacity: 0.3; }
+  50% { opacity: 0.9; }
+  100% { top: 100%; opacity: 0.3; }
+}
+
+.animate-scan-line {
+  animation: blueprint-scan 2.2s infinite ease-in-out;
+}
+
+/* Smooth continuous progress bar slide */
+@keyframes progress-slide {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(50%); }
+  100% { transform: translateX(250%); }
+}
+
+.animate-progress-slide {
+  animation: progress-slide 1.6s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
