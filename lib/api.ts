@@ -1,6 +1,15 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5000/api';
+// Defaults to your live deployed Node.js Gateway on Render
+let rawUrl = process.env.NEXT_PUBLIC_API_URL || 'https://eduvision-ai-server-node.onrender.com/api';
+
+// Safely normalize trailing slashes and ensure /api endpoint
+rawUrl = rawUrl.trim();
+if (!rawUrl.endsWith('/api')) {
+  rawUrl = rawUrl.replace(/\/+$/, '') + '/api';
+}
+
+const API_BASE_URL = rawUrl;
 
 const api = axios.create({
   baseURL: API_BASE_URL,

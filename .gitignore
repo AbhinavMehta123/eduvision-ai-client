@@ -24,6 +24,7 @@ pnpm-debug.log*
 .env*.local
 .env
 .env.example
+.env.production
 
 # Vercel Deployment
 .vercel
